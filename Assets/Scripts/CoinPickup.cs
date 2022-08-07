@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class CoinPickup : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    [SerializeField] AudioClip coinPickUpSFX;
+    [SerializeField] int pointsForCoinPickUp = 100;
+    bool wasCollected = false;
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Player" && !wasCollected) 
+        {
+            wasCollected = true;
+            FindObjectOfType<GameSession>().AddToScore(pointsForCoinPickUp);
+            AudioSource.PlayClipAtPoint(coinPickUpSFX, Camera.main.transform.position);
+            gameObject.SetActive(false);// not necessary
+            Destroy(gameObject);
+        }
     }
 }
